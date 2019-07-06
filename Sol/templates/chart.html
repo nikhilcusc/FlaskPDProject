@@ -4,115 +4,74 @@
   <!-- import plugin script -->
   <script src='static/Chart.min.js'></script>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://d3js.org/d3.v4.js"></script>
+	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
 </head>
 
 
 <h1>Simple Line Chart</h1>
 
-<svg width = "960" heigth="500"></svg>
 <script>
-var data = [10, 5, 12, 15];
-         
-         var width = 300 
-            scaleFactor = 20, 
-            barHeight = 30;
-         
-         var graph = d3.select("body")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", barHeight * data.length);
-         
-         var bar = graph.selectAll("g")
-            .data(data)
-            .enter()
-            .append("g")
-            .attr("transform", function(d, i) {
-               return "translate(0," + i * barHeight + ")";
-            });
-         bar.append("rect").attr("width", function(d) {
-            return d * scaleFactor;
-         })
-         
-         .attr("height", barHeight - 1);
-         
-         bar.append("text")
-            .attr("x", function(d) { return (d*scaleFactor); })
-            .attr("y", barHeight / 2)
-            .attr("dy", ".35em")
-            .text(function(d) { return d; });
+var labels = [{% for item in labels %}
+             "{{item}}",
+            {% endfor %}];
+var data = [{% for item in values %}
+             "{{item}}",
+            {% endfor %}];
+
+// set the dimensions and margins of the graph
+console.log(data);
+var margin = {top: 10, right: 30, bottom: 30, left: 40}, width = 460 - margin.left - margin.right, height = 400 - margin.top - margin.bottom;
+// append the svg object to the body of the page
+var svg = d3.select("body")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// get the data
+
+  // X axis: scale and draw:
+console.log(data);
+  var x = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return d.x })])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .range([0, width]);
+
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // set the parameters for the histogram
+  var histogram = d3.histogram()
+      .value(function(d) { return d.x; })   // I need to give the vector of value
+      .domain(x.domain())  // then the domain of the graphic
+      .thresholds(x.ticks(70)); // then the numbers of bins
+
+  // And apply this function to data to get the bins
+  var bins = histogram(data);
+console.log(bins);
+
+  // Y axis: scale and draw:
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+  // append the bar rectangles to the svg element
+  svg.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+        .attr("x", x(data))
+	
+        //.attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.dx)  ; })
+        .attr("height", function(d) { return  y(d.y); })
+        .style("fill", "#69b3a2")
+
 </script>
 
-<!-- bar chart canvas element -->
-<!--
-<canvas id="canvas1" width="600" height="100"></canvas>
-<canvas id="canvas2" width="600" height="700"></canvas>
-<p id="caption">The chart is displaying a simple line chart.</p>
 
-
-<script>
-    let myChart = document.getElementById('canvas2').getContext('2d');
-
-    // Global Options
-    Chart.defaults.global.defaultFontFamily = 'Lato';
-    Chart.defaults.global.defaultFontSize = 18;
-    Chart.defaults.global.defaultFontColor = '#777';
-
-    let massPopChart = new Chart(myChart, {
-      type:'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
-      data:{
-        labels:['Boston', 'Worcester', 'Springfield', 'Lowell', 'Cambridge', 'New Bedford'],
-        datasets:[{
-          label:'Population',
-          data:[
-            617594,
-            181045,
-            153060,
-            106519,
-            105162,
-            95072
-          ],
-          //backgroundColor:'green',
-          backgroundColor:[
-            'rgba(255, 99, 132, 0.6)',
-            'rgba(54, 162, 235, 0.6)',
-            'rgba(255, 206, 86, 0.6)',
-            'rgba(75, 192, 192, 0.6)',
-            'rgba(153, 102, 255, 0.6)',
-            'rgba(255, 159, 64, 0.6)',
-            'rgba(255, 99, 132, 0.6)'
-          ],
-          borderWidth:1,
-          borderColor:'#777',
-          hoverBorderWidth:3,
-          hoverBorderColor:'#000'
-        }]
-      },
-      options:{
-        title:{
-          display:true,
-          text:'Largest Cities In Massachusetts',
-          fontSize:25
-        },
-        legend:{
-          display:true,
-          position:'right',
-          labels:{
-            fontColor:'#000'
-          }
-        },
-        layout:{
-          padding:{
-            left:50,
-            right:0,
-            bottom:0,
-            top:0
-          }
-        },
-        tooltips:{
-          enabled:true
-        }
-      }
-    });
- 
-</script>
--->

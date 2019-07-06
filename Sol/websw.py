@@ -22,8 +22,8 @@ def login():
 
 @app.route('/charts')
 def chart():
-    labels = ["January","February","March","April","May","June","July","August"]
-    values = [10,9,8,7,6,4,7,8]
-    return render_template('chart.html',title='chart')
+    labels = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    values = [10,9,8,7,6,4,7,8,6,4,9,2]
+    return render_template('chart.html',title='chart',labels= labels, values= values)
 
 
