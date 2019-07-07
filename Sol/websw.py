@@ -20,10 +20,16 @@ def login():
     return render_template('login.html',title='login')
 
 
-@app.route('/charts')
+@app.route('/chart')
 def chart():
     labels = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     values = [10,9,8,7,6,4,7,8,6,4,9,2]
     return render_template('chart.html',title='chart',labels= labels, values= values)
+
+@app.route('/charts2')
+def charts2():
+    labels = ["January","February","March","April","May","June","July","August","September","October","November","December"]
+    values = [10,9,8,7,6,4,7,8,6,4,9,2]
+    return render_template('charts2.html',title='chart',labels= labels, values= values)
 
 

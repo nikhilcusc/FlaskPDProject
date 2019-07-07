@@ -3,7 +3,7 @@
   <title>Chart.js Example</title>
   <!-- import plugin script -->
   <script src='static/Chart.min.js'></script>
-	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<!-- script src="https://d3js.org/d3.v5.min.js"></script-->
 	<script src="https://d3js.org/d3.v4.js"></script>
 	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
 </head>
@@ -16,17 +16,21 @@ var labels = [{% for item in labels %}
              "{{item}}",
             {% endfor %}];
 var data = [{% for item in values %}
-             "{{item}}",
-            {% endfor %}];
+             parseInt("{{item}}"),
+            {% endfor %}];  // convert the char to int while creating the data array
+
+console.log("data : " + data + typeof data + " length of data : " + data.length);
+
+var maxdata = d3.max(data);
+var mindata = d3.min(data);
 
 // set the dimensions and margins of the graph
-console.log(data);
+console.log(" mindata : " + mindata + typeof array + " and maxdata : " + maxdata);
+
 var margin = {top: 10, right: 30, bottom: 30, left: 40}, 
 	width = 460 - margin.left - margin.right, 
 	height = 400 - margin.top - margin.bottom;
 
-console.log(height);
-console.log(width);
 // append the svg object to the body of the page
 var svg = d3.select("body")
   .append("svg")
@@ -36,12 +40,9 @@ var svg = d3.select("body")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-// get the data
-d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/1_OneNum.csv", function(data) {
-  // X axis: scale and draw:
-
+ // X axis: scale and draw:
   var x = d3.scaleLinear()
-      .domain([0, 1000])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([mindata, maxdata])
       .range([0, width]);
 
   svg.append("g")
@@ -49,37 +50,41 @@ d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_data
       .call(d3.axisBottom(x));
 
   // set the parameters for the histogram
-  var histogram = d3.histogram()
+var databins = d3.histogram()
+	.thresholds(x.ticks(5))
+	(data);
+/*
+ var histogram = d3.histogram()
       .value(function(d) { return d.price; })   // I need to give the vector of value
       .domain(x.domain())  // then the domain of the graphic
       .thresholds(x.ticks(11)); // then the numbers of bins
-
-console.log("histogram : " + histogram);
-  // And apply this function to data to get the bins
-  var bins = histogram(data);
-console.log("bins : " + bins);
+*/
+console.log("bins : " + databins);
 
   // Y axis: scale and draw:
   var y = d3.scaleLinear()
-      .range([height, 0]);
-      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+      .range([0, height]);
+      y.domain([0, d3.max(databins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
   svg.append("g")
       .call(d3.axisLeft(y));
 
 
-
   // append the bar rectangles to the svg element
-  svg.selectAll("rect")
-      .data(bins)
+var bar = svg.selectAll(".bar")
+      .data(databins)
       .enter()
-      .append("rect")
-        .attr("x", 1)
-	
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-        .attr("width", function(d) { return x(d.x1) - x(d.x0) - 5  ; })
-        .attr("height", function(d) { return  height - y(d.length); })
-        .style("fill", "#69b3a2")
-});
+      .append("g")
+	.attr("class","bar")
+	.attr("transform", function(d, i) { return "translate(" + i*50 + "," + 0 + ")"; });
+        
+	bar.append("rect")
+	.attr("x", 1)
+       	//.attr("width", ( x(data[0].dx)-x(0) )-1)
+	.attr("width",50)
+        .attr("height", function(d) { return  y(d); })
+        .style("fill", "#69b3a2");
+
+
 </script>
 
 
