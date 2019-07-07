@@ -1,0 +1,78 @@
+<head>
+  <meta charset="utf-8" />
+  <title>Chart.js Example</title>
+  <!-- import plugin script -->
+  <script src='static/Chart.min.js'></script>
+	<!-- script src="https://d3js.org/d3.v5.min.js"></script-->
+	<script src="https://d3js.org/d3.v4.js"></script>
+	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
+</head>
+
+
+<h1>Simple Line Chart</h1>
+<div id="chart1"> </div>
+<script>
+var labels = [{% for item in labels %}
+             "{{item}}",
+            {% endfor %}];  // convert the char to int while creating the data array
+
+
+var data = [{% for item in values %}
+             parseInt("{{item}}"),
+            {% endfor %}];  // convert the char to int while creating the data array
+var data2 = [{% for item in values2 %}
+             parseInt("{{item}}"),
+            {% endfor %}];  // convert the char to int while creating the data array
+
+console.log("labels : "+ labels +" data : " + data + " data2 : "+ data2);
+var parseTime = d3.timeParse("%d-%b-%y");
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#chart1")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+
+//Read the data
+//d3.csv("/home/fortknox/Documents/PD/Sol/data/data.csv",
+//d3.csv("/data/data.csv",
+  // When reading the csv, I must format variables:
+  //function(d){
+  //  return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  //},
+
+
+console.log(data);
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return d; })])
+      .range([ height,0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d, i) { return x(d) })
+        .y(function(d , i) { return y(i) })
+        )
+</script>
