@@ -50,6 +50,7 @@ var svg = d3.select("#chart1")
 
 
 console.log(data);
+/*
     // Add X axis --> it is a date format
     var x = d3.scaleTime()
       .domain(d3.extent(data, function(d) { return d; }))
@@ -57,7 +58,13 @@ console.log(data);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
-
+*/
+var x = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return d; })])
+      .range([ 0,height ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
       .domain([0, d3.max(data, function(d) { return d; })])
@@ -72,7 +79,18 @@ console.log(data);
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
-        .x(function(d, i) { return x(d) })
-        .y(function(d , i) { return y(i) })
+        .y(function(d , i) { return y(d) })
+        .x(function(d, i) { return x(i) })
         )
+	svg.append("path")
+      .datum(data2)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .y(function(d , i) { return y(d) })
+        .x(function(d, i) { return x(i) })
+        )
+
+
 </script>

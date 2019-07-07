@@ -41,7 +41,7 @@ def linechart():
 23-04-12,20-04-12,
 19-04-12, 18-04-12,
 17-04-12, 16-04-12,]
-    values = [10,9,8,7,6,4,7,8,6,4,9,2]
-    values2 = [9,8,7,6,4,7,8,6,4,9,2,10]
+    values = [0,10,9,8,2,6,4,7,8,6,4,9]
+    values2 = [0,9,8,2,6,4,7,8,6,4,9,2]
     return render_template('linechart.html',title='chart',labels= labels, values= values, values2= values2)
 
