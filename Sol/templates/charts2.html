@@ -4,7 +4,7 @@
   <!-- import plugin script -->
   <script src='static/Chart.min.js'></script>
 	<!-- script src="https://d3js.org/d3.v5.min.js"></script-->
-	<script src="https://d3js.org/d3.v4.js"></script>
+	<script src="https://d3js.org/d3.v3.js"></script>
 	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
 </head>
 
@@ -18,7 +18,7 @@ var labels = [{% for item in labels %}
 var data = [{% for item in values %}
              parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
-
+var data = d3.range(1000).map(d3.random.normal(20, 5));
 console.log("data : " + data + typeof data + " length of data : " + data.length);
 
 var maxdata = d3.max(data);
@@ -41,18 +41,16 @@ var svg = d3.select("body")
           "translate(" + margin.left + "," + margin.top + ")");
 
  // X axis: scale and draw:
-  var x = d3.scaleLinear()
+  var x = d3.scale.linear()
       .domain([mindata, maxdata])
       .range([0, width]);
 
-  svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+  
 
   // set the parameters for the histogram
-var databins = d3.histogram()
-	.thresholds(x.ticks(5))
-	(data);
+var databins = d3.layout.histogram()
+	.bins(x.ticks(20))
+	    (data)
 /*
  var histogram = d3.histogram()
       .value(function(d) { return d.price; })   // I need to give the vector of value
@@ -62,11 +60,10 @@ var databins = d3.histogram()
 console.log("bins : " + databins);
 
   // Y axis: scale and draw:
-  var y = d3.scaleLinear()
+  var y = d3.scale.linear()
       .range([0, height]);
       y.domain([0, d3.max(databins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-  svg.append("g")
-      .call(d3.axisLeft(y));
+
 
 
   // append the bar rectangles to the svg element
@@ -75,13 +72,13 @@ var bar = svg.selectAll(".bar")
       .enter()
       .append("g")
 	.attr("class","bar")
-	.attr("transform", function(d, i) { return "translate(" + i*50 + "," + 0 + ")"; });
+	.attr("transform", function(d, i) { return "translate(" + i*20 + "," +0 + ")"; });
         
 	bar.append("rect")
 	.attr("x", 1)
        	//.attr("width", ( x(data[0].dx)-x(0) )-1)
 	.attr("width",50)
-        .attr("height", function(d) { return  y(d); })
+        .attr("height", function(d) { return y(d); })
         .style("fill", "#69b3a2");
 
 

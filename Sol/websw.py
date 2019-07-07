@@ -30,6 +30,6 @@ def chart():
 def charts2():
     labels = ["January","February","March","April","May","June","July","August","September","October","November","December"]
     values = [10,9,8,7,6,4,7,8,6,4,9,2]
-    return render_template('charts2.html',title='chart',labels= labels, values= values)
+    return render_template('charts3.html',title='chart',labels= labels, values= values)
 
 
