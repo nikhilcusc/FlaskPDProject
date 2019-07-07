@@ -9,7 +9,7 @@
 </head>
 
 
-<h1>Simple Line Chart</h1>
+<h1>Simple histogram</h1>
 
 <div id="chart1"> </div>
 <div id="chart2"> </div>
@@ -19,31 +19,49 @@
 
 var color = "steelblue";
 
+
+var labels = [{% for item in labels %}
+             "{{item}}",
+            {% endfor %}];  // convert the char to int while creating the data array
+
+
 var data = [{% for item in values %}
              parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
+var data2 = [{% for item in values2 %}
+             parseInt("{{item}}"),
+            {% endfor %}];  // convert the char to int while creating the data array
 
+console.log("labels : "+ labels +" data : " + data + " data2 : "+ data2);
 
 // A formatter for counts.
 var formatCount = d3.format(",.0f");
 
-var margin = {top: 20, right: 30, bottom: 30, left: 30},
+var margin = {top: 20, right: 40, bottom: 30, left: 30},
     width = 480 - margin.left - margin.right,
     height = 250 - margin.top - margin.bottom;
 
-var max = d3.max(data);
-var min = d3.min(data);
+var datamax = d3.max(data);
+var datamin = d3.min(data);
+
+var data2max = d3.max(data2);
+var data2min = d3.min(data2);
+
 var x = d3.scale.linear()
-      .domain([min, max])
+      .domain([datamin, datamax])
       .range([0, width]);
 
 // Generate a histogram using twenty uniformly-spaced bins.
 var databins = d3.layout.histogram()
     .bins(x.ticks(20)) //change this later for dynamically changing values
     (data);
+var databins2 = d3.layout.histogram()
+    .bins(x.ticks(20))
+    (data2);
 
 var yMax = d3.max(databins, function(d){return d.length});
 var yMin = d3.min(databins, function(d){return d.length});
+
 var colorScale = d3.scale.linear()
             .domain([yMin, yMax])
             .range([d3.rgb(color).brighter(), d3.rgb(color).darker()]);
@@ -62,24 +80,45 @@ var svg = d3.select("#chart1").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
 var bar = svg.selectAll(".bar")
-    .data(databins)
+    .data(data)
   .enter().append("g")
     .attr("class", "bar")
     .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
 
-bar.append("rect")
-    .attr("x", 1)
-    .attr("width", (x(databins[0].dx) - x(0)) - 1)
-    .attr("height", function(d) { return height - y(d.y); })
-    .attr("fill", function(d) { return colorScale(d.y) });
+	bar.append("rect")
+	    .attr("x", 1)
+	    .attr("width", (x(databins[0].dx) - x(0)) - 1)
+	    .attr("height", function(d) { return height - y(d.y); })
+	    .attr("fill", function(d) { return colorScale(d.y) });
 
-bar.append("text")
-    .attr("dy", ".75em")
-    .attr("y", -12)
-    .attr("x", (x(databins[0].dx) - x(0)) / 2)
-    .attr("text-anchor", "middle")
-    .text(function(d) { return formatCount(d.y); });
+	bar.append("text")
+	    .attr("dy", ".75em")
+	    .attr("y", -12)
+	    .attr("x", (x(databins[0].dx) - x(0)) / 2)
+	    .attr("text-anchor", "middle")
+	    .text(function(d) { return formatCount(d.y); });
+
+var bar2 = svg.selectAll(".bar2")
+    .data(data)
+  .enter().append("g")
+    .attr("class", "bar2")
+    .attr("transform", function(d) { return "translate(" + x(d.x) + "," + y(d.y) + ")"; });
+
+	bar.append("rect")
+	    .attr("x", 1)
+	    .attr("width", (x(databins[0].dx) - x(0)) - 1)
+	    .attr("height", function(d) { return height - y(d.y); })
+	    .attr("fill", function(d) { return colorScale(d.y) });
+
+	bar.append("text")
+	    .attr("dy", ".75em")
+	    .attr("y", -12)
+	    .attr("x", (x(databins[0].dx) - x(0)) / 2)
+	    .attr("text-anchor", "middle")
+	    .text(function(d) { return formatCount(d.y); });
+
 
 svg.append("g")
     .attr("class", "x axis")
