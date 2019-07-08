@@ -42,8 +42,8 @@ var data2 = [{% for item in values2 %}
 console.log("labels : "+ labels +" data : " + data + " data2 : "+ data2);
 var parseTime = d3.timeParse("%d-%b-%y");
 var margin = {top: 10, right: 30, bottom: 30, left: 60},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = 860 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
 var svg = d3.select("#chart1")
@@ -54,9 +54,10 @@ var svg = d3.select("#chart1")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 console.log(data);
+console.log(data.length);
 
 var x = d3.scaleLinear()
-      .domain([0, d3.max(data, function(d) { return d; })])
+      .domain([0, data.length ])
       .range([ 0,height ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -101,7 +102,7 @@ var svg = d3.select("#chart2")
 console.log(consumption);
 console.log(d3.max(consumption, function(d) { return d; }));
 var x = d3.scaleLinear()
-      .domain([0, d3.max(consumption, function(d) { return d; })])
+      .domain([0, consumption.length])
       .range([ 0,height ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -133,16 +134,16 @@ var svg = d3.select("#chart3")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 console.log(temperature);
-console.log(d3.max(temperature, function(d) { return d; }));
+console.log(temperature.length);
 var x = d3.scaleLinear()
-      .domain([0, d3.max(consumption, function(d) { return d; })])
+      .domain([0, temperature.length])
       .range([ 0,height ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, 100])
+      .domain([0, d3.max(temperature, function(d) { return d; })])
       .range([ height,0 ]);
     svg.append("g")
       .call(d3.axisLeft(y));
