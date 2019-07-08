@@ -12,13 +12,14 @@
 <h1>Simple Line Chart</h1>
 <div id="chart1"> </div>
 <div id="chart2"> </div>
+<div id="chart3"> </div>
 <script>
 var consumption = [{% for item in consumption %}
-             "{{item}}",
+            parseFloat("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
 
 var temperature = [{% for item in temperature %}
-             "{{item}}",
+             parseFloat("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
 
 var time = [{% for item in time %}
@@ -90,28 +91,30 @@ var x = d3.scaleLinear()
 
 
 // chart2
-var svg2 = d3.select("#chart2")
-  .append("svg2")
+var svg = d3.select("#chart2")
+  .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
-          "translate(" + margin.left + "," + margin.top + height + ")");
+          "translate(" + margin.left + "," + margin.top + ")");
+console.log(consumption);
+console.log(d3.max(consumption, function(d) { return d; }));
 var x = d3.scaleLinear()
       .domain([0, d3.max(consumption, function(d) { return d; })])
       .range([ 0,height ]);
-    svg2.append("g")
+    svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
     // Add Y axis
     var y = d3.scaleLinear()
-      .domain([0, d3.max(temperature, function(d) { return d; })])
+      .domain([0, d3.max(consumption, function(d) { return d; })])
       .range([ height,0 ]);
-    svg2.append("g")
+    svg.append("g")
       .call(d3.axisLeft(y));
 
     // Add the line
-    svg2.append("path")
+    svg.append("path")
       .datum(consumption)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -120,7 +123,32 @@ var x = d3.scaleLinear()
         .y(function(d , i) { return y(d) })
         .x(function(d, i) { return x(i) })
         )
-	svg2.append("path")// for the second line
+
+// chart3
+var svg = d3.select("#chart3")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+console.log(temperature);
+console.log(d3.max(temperature, function(d) { return d; }));
+var x = d3.scaleLinear()
+      .domain([0, d3.max(consumption, function(d) { return d; })])
+      .range([ 0,height ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, 100])
+      .range([ height,0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
       .datum(temperature)
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -129,5 +157,7 @@ var x = d3.scaleLinear()
         .y(function(d , i) { return y(d) })
         .x(function(d, i) { return x(i) })
         )
+	
+
 
 </script>
