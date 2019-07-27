@@ -4,7 +4,9 @@
   <!-- import plugin script -->
   <script src='static/Chart.min.js'></script>
 	<!-- script src="https://d3js.org/d3.v5.min.js"></script-->
-	<script src="https://d3js.org/d3.v3.js"></script>
+	<script src="https://d3js.org/d3.v4.js"></script>
+
+	<script src="https://d3js.org/d3-time-format.v2.min.js"></script>
 	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
 </head>
 
@@ -12,20 +14,32 @@
 <h1>Simple Line Chart</h1>
 
 <script>
-var labels = [{% for item in labels %}
+var parseDate = d3.timeParse("%a %m %d %H:%M:%S %Y");
+var parseDate2 = d3.timeParse("%Y-%m-%d %H:%M:%S");
+
+var time = [{% for item in time %}
              "{{item}}",
+            {% endfor %}];  // convert the char to int while creating the data array
+console.log("time "+time);
+var labels = [{% for item in labels %}
+             parseDate("{{item}}"),
             {% endfor %}];
 var data = [{% for item in values %}
              parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
-var data = d3.range(1000).map(d3.random.normal(20, 5));
 console.log("data : " + data + typeof data + " length of data : " + data.length);
-
+console.log("dates :" + labels)
 var maxdata = d3.max(data);
 var mindata = d3.min(data);
 
+
+//var parseTime = d3.timeParse("%B %d, %Y"); //Tue Jun 30 2015 00:00:00 GMT-0700 (Pacific Daylight Time)
+var parseTime = d3.timeParse("%B %d, %Y");
+var testTime = parseTime("June 30, 2015");
+console.log("test"+testTime);
+
 // set the dimensions and margins of the graph
-console.log(" mindata : " + mindata + typeof array + " and maxdata : " + maxdata);
+console.log(" \n mindata : " + mindata + typeof data + " \n and maxdata : " + maxdata);
 
 var margin = {top: 10, right: 30, bottom: 30, left: 40}, 
 	width = 460 - margin.left - margin.right, 
@@ -39,49 +53,14 @@ var svg = d3.select("body")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-
- // X axis: scale and draw:
-  var x = d3.scale.linear()
+ // x axis
+	var x = d3.scaleTime().range([0, width])
+	var xAxis = d3.axisBottom(x);
+ // y axis: scale and draw:
+  var y = d3.scaleLinear()
       .domain([mindata, maxdata])
       .range([0, width]);
-
-  
-
-  // set the parameters for the histogram
-var databins = d3.layout.histogram()
-	.bins(x.ticks(20))
-	    (data)
-/*
- var histogram = d3.histogram()
-      .value(function(d) { return d.price; })   // I need to give the vector of value
-      .domain(x.domain())  // then the domain of the graphic
-      .thresholds(x.ticks(11)); // then the numbers of bins
-*/
-console.log("bins : " + databins);
-
-  // Y axis: scale and draw:
-  var y = d3.scale.linear()
-      .range([0, height]);
-      y.domain([0, d3.max(databins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-
-
-
-  // append the bar rectangles to the svg element
-var bar = svg.selectAll(".bar")
-      .data(databins)
-      .enter()
-      .append("g")
-	.attr("class","bar")
-	.attr("transform", function(d, i) { return "translate(" + i*20 + "," +0 + ")"; });
-        
-	bar.append("rect")
-	.attr("x", 1)
-       	//.attr("width", ( x(data[0].dx)-x(0) )-1)
-	.attr("width",50)
-        .attr("height", function(d) { return y(d); })
-        .style("fill", "#69b3a2");
-
-
-</script>
+	var yAxis = d3.axisLeft(y);
+  </script>
 
 

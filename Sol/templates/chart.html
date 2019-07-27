@@ -5,6 +5,8 @@
   <script src='static/Chart.min.js'></script>
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="https://d3js.org/d3.v4.js"></script>
+	<script src="https://d3js.org/d3-time-format.v2.min.js"></script>
+
 	<!--script src="https://d3js.org/d3.v3.min.js"></script --> 
 </head>
 
@@ -16,11 +18,14 @@ var labels = [{% for item in labels %}
              "{{item}}",
             {% endfor %}];
 var data = [{% for item in values %}
-             "{{item}}",
+             parseInt("{{item}}"),
             {% endfor %}];
 
+
+console.log("data : "+data);
+console.log("labels : "+labels);
 // set the dimensions and margins of the graph
-console.log(data);
+
 var margin = {top: 10, right: 30, bottom: 30, left: 40}, 
 	width = 460 - margin.left - margin.right, 
 	height = 400 - margin.top - margin.bottom;

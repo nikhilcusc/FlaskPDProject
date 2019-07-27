@@ -1,0 +1,7 @@
+Changed from D3 to Chartjs
+1 ParseDate - done
+2 Figure out why temperature does not load completely
+3 Figure out how to zoom in the line chart
+4 Is it possible to plot both temperature and consumption in one graph?
+5 What would be a good way to parse so much data? Playing with idea of filtering at source(in python) vs filtering in Javascript.
+

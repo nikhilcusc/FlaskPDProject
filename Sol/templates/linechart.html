@@ -14,12 +14,14 @@
 <div id="chart2"> </div>
 <div id="chart3"> </div>
 <script>
+
+
 var consumption = [{% for item in consumption %}
             parseFloat("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
 
 var temperature = [{% for item in temperature %}
-             parseFloat("{{item}}"),
+             parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
 
 var time = [{% for item in time %}
@@ -39,12 +41,12 @@ var data2 = [{% for item in values2 %}
              parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
 
-console.log("labels : "+ labels +" data : " + data + " data2 : "+ data2);
+console.log("labels : "+ labels +"\ndata : " + data + "\ndata2 : "+ data2, "\ntime : "+time);
 var parseTime = d3.timeParse("%d-%b-%y");
 var margin = {top: 10, right: 30, bottom: 30, left: 60},
     width = 860 - margin.left - margin.right,
     height = 800 - margin.top - margin.bottom;
-
+/*
 // append the svg object to the body of the page
 var svg = d3.select("#chart1")
   .append("svg")
@@ -92,7 +94,7 @@ var x = d3.scaleLinear()
 
 
 // chart2
-var svg = d3.select("#chart2")
+var svg = d3.select("#chart3")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -103,7 +105,7 @@ console.log(consumption);
 console.log(d3.max(consumption, function(d) { return d; }));
 var x = d3.scaleLinear()
       .domain([0, consumption.length])
-      .range([ 0,height ]);
+      .range([ 0, height ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
@@ -124,9 +126,9 @@ var x = d3.scaleLinear()
         .y(function(d , i) { return y(d) })
         .x(function(d, i) { return x(i) })
         )
-
+*/
 // chart3
-var svg = d3.select("#chart3")
+var svg = d3.select("#chart2")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -134,17 +136,18 @@ var svg = d3.select("#chart3")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 console.log(temperature);
-console.log(temperature.length);
+console.log("Length of temperature : "+temperature.length);
 var x = d3.scaleLinear()
       .domain([0, temperature.length])
-      .range([ 0,height ]);
+      .range([ 0, width ]);
     svg.append("g")
       .attr("transform", "translate(0," + height + ")")
       .call(d3.axisBottom(x));
+
     // Add Y axis
     var y = d3.scaleLinear()
       .domain([0, d3.max(temperature, function(d) { return d; })])
-      .range([ height,0 ]);
+      .range([ height ,0 ]);
     svg.append("g")
       .call(d3.axisLeft(y));
 
@@ -156,7 +159,7 @@ var x = d3.scaleLinear()
       .attr("stroke-width", 1.5)
       .attr("d", d3.line()
         .y(function(d , i) { return y(d) })
-        .x(function(d, i) { return x(i) })
+        .x(function(d , i) { return x(i) })
         )
 	
 
