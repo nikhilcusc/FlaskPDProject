@@ -11,12 +11,36 @@
 <body>
 
 <canvas id="line-chart" width="700" height="450"></canvas>
+<!--
+nth value slider
+-->
 <div class="slidecontainer">
   <input type="range" min="1" max="100" value="50" class="slider" id="nth"
-oninput="range_weight_disp.value = nth.value">
-   <output  id="range_weight_disp"></output>
+oninput="nthOp.value = nth.value">
+   <output  id="nthOp"></output>
 </div>
-<button onclick="updateChart()"> Update charts </button>
+<button onclick="updatenthChart()"> Update charts (updates number of values in chart)</button>
+
+<!--
+start value slider
+-->
+<div class="slidecontainer">
+  <input type="range" min="1" max="17000" value="1" class="slider" id="startSlider"
+oninput="startSliderOp.value = startSlider.value">
+   <output  id="startSliderOp"></output>
+</div>
+<button onclick="updateStartChart()"> Update start and end of charts </button>
+
+<!--
+end value slider
+-->
+<div class="slidecontainer">
+  <input type="range" min="17001" max="35180" value="35180" class="slider" id="endSlider"
+oninput="endSliderOp.value = endSlider.value">
+   <output  id="endSliderOp"></output>
+</div>
+
+
 <canvas id="line-chart2" width="650" height="450"></canvas>
 
 <script>
@@ -32,9 +56,9 @@ var temperature = [{% for item in temperature %}
 var consumption = [{% for item in consumption %}
              parseInt("{{item}}"),
             {% endfor %}];  // convert the char to int while creating the data array
-console.log("length of time : " + time.length + "dates :" + time);
-console.log("length of consumption : " + consumption.length +"consumption : " + consumption );
-console.log("length of temperature : " + temperature.length + "temperature :" + temperature);
+//console.log("length of time : " + time.length + "dates :" + time);
+//console.log("length of consumption : " + consumption.length +"consumption : " + consumption );
+//console.log("length of temperature : " + temperature.length + "temperature :" + temperature);
 
 
 
@@ -53,12 +77,32 @@ var chart1 = new Chart(document.getElementById("line-chart"), {
   options: {
     title: {
       display: true,
-      text: 'World population per region (in millions)'
+      text: 'Consumption (in kW)'
     }
   }
 });
 
-function updateChart(){
+var chart2 = new Chart(document.getElementById("line-chart2"), {
+  type: 'line',
+  data: {
+    labels: time,
+    datasets: [{ 
+        data: temperature,
+        label: "temperature",
+        borderColor: "#3e95cd",
+        fill: false
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Temperature (in Fahrenheit)'
+    }
+  }
+});
+// Function for nth update
+function updatenthChart(){
 var nth = parseInt(document.getElementById("nth").value);
 var arr = [];
 var labs = [];
@@ -77,25 +121,28 @@ chart1.update();
 chart2.update();
 };
 
-var chart2 = new Chart(document.getElementById("line-chart2"), {
-  type: 'line',
-  data: {
-    labels: time,
-    datasets: [{ 
-        data: temperature,
-        label: "temperature",
-        borderColor: "#3e95cd",
-        fill: false
-      }
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'World population per region (in millions)'
-    }
-  }
-});
+// Function for updating start and end of chart
+function updateStartChart(){
+var nth = parseInt(document.getElementById("nth").value);
+var startVal = parseInt(document.getElementById("startSlider").value);
+var endValue = parseInt(document.getElementById("endSlider").value);
+var arr = [];
+var labs = [];
+var temps = [];
+for (var i = startVal; i < endValue; i=i+nth) {
+  arr.push(consumption[i]);
+    temps.push(temperature[i]);
+    labs.push(time[i]);
+}
+console.log(arr);
+chart1.data.datasets[0].data = arr;
+chart2.data.datasets[0].data = temps;
+chart1.data.labels = labs;
+chart2.data.labels = labs;
+chart1.update();
+chart2.update();
+};
+
 </script>
 
 </body>
