@@ -1,6 +1,12 @@
 !!Changed from D3 to Chartjs
-1 Consumption does not show up when I try all the data. Works when I have only 1000 data points.
-
+1 Add a slider to change the number of values on the chart.
+	1.1 Have a slider between 2 charts.
+	1.2 Have an update function to change the values.
+		Idea is to take every nth values, where n is selected on the slider.
+2 Add another slider to select the range.
+	2.1 Figure out how to change the start and end of the array.
+3 Maybe try to show both temperature and consumption in one chart. Scaling might be an issue here.
+~Works now 1 Consumption does not show up when I try all the data. Works when I have only 1000 data points.~
 
 
 

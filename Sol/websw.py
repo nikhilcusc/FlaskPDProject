@@ -43,7 +43,7 @@ def chartjs():
 17-04-12, 16-04-12]
     values = [1,10,9,8,2,6,4,7,8,6,4,9]
     values2 = [0,9,8,2,6,4,7,8,6,4]
-    return render_template('chartjs1.html',title='chartjs',time= time[:1000], consumption= consumption[:1000], temperature= temperature[:1000])
+    return render_template('chartjs1.html',title='chartjs',time= time, consumption= consumption, temperature= temperature)
 
 @app.route('/linechart')
 def linechart():

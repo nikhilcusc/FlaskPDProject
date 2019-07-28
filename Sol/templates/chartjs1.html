@@ -11,6 +11,7 @@
 <body>
 
 <canvas id="line-chart" width="700" height="450"></canvas>
+<button onclick="updateChart()"> Update charts</button>
 <canvas id="line-chart2" width="650" height="450"></canvas>
 
 <script>
@@ -30,7 +31,9 @@ console.log("length of time : " + time.length + "dates :" + time);
 console.log("length of consumption : " + consumption.length +"consumption : " + consumption );
 console.log("length of temperature : " + temperature.length + "temperature :" + temperature);
 
-new Chart(document.getElementById("line-chart"), {
+
+
+var chart1 = new Chart(document.getElementById("line-chart"), {
   type: 'line',
   data: {
     labels: time,
@@ -49,6 +52,11 @@ new Chart(document.getElementById("line-chart"), {
     }
   }
 });
+
+function updateChart(){
+chart1.data.datasets[0].data = temperature;
+chart1.update();
+};
 
 new Chart(document.getElementById("line-chart2"), {
   type: 'line',
