@@ -25,7 +25,7 @@ def login():
 def chartjs():
     dataxls = pd.read_excel (r'/home/fortknox/Documents/PD/PD_challenge/PD_challange_dataset.xlsx')
     df = pd.DataFrame(dataxls)
-    #df.fillna(0)
+    df.fillna(0)
     temperature = []
     consumption = []
     time = []
@@ -42,8 +42,8 @@ def chartjs():
 19-04-12, 18-04-12,
 17-04-12, 16-04-12]
     values = [1,10,9,8,2,6,4,7,8,6,4,9]
-    values2 = [0,9,8,2,6,4,7,8,6,4,9,2]
-    return render_template('chartjs1.html',title='chartjs',time=time,labels= labels, values= values, values2= values2)
+    values2 = [0,9,8,2,6,4,7,8,6,4]
+    return render_template('chartjs1.html',title='chartjs',time= time[:1000], consumption= consumption[:1000], temperature= temperature[:1000])
 
 @app.route('/linechart')
 def linechart():

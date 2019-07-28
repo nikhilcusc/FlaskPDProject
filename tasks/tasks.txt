@@ -1,6 +1,12 @@
-Changed from D3 to Chartjs
+!!Changed from D3 to Chartjs
+1 Consumption does not show up when I try all the data. Works when I have only 1000 data points.
+
+
+
+
+!! this was D3 
 1 ParseDate - done
-2 Figure out why temperature does not load completely
+2 Figure out why temperature does not load completely - if anyone finds the answer - please post it here - https://stackoverflow.com/questions/57137577/d3-linechart-plots-only-some-points
 3 Figure out how to zoom in the line chart
 4 Is it possible to plot both temperature and consumption in one graph?
 5 What would be a good way to parse so much data? Playing with idea of filtering at source(in python) vs filtering in Javascript.
