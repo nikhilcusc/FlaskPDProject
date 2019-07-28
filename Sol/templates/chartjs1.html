@@ -11,7 +11,12 @@
 <body>
 
 <canvas id="line-chart" width="700" height="450"></canvas>
-<button onclick="updateChart()"> Update charts</button>
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="nth"
+oninput="range_weight_disp.value = nth.value">
+   <output  id="range_weight_disp"></output>
+</div>
+<button onclick="updateChart()"> Update charts </button>
 <canvas id="line-chart2" width="650" height="450"></canvas>
 
 <script>
@@ -54,11 +59,25 @@ var chart1 = new Chart(document.getElementById("line-chart"), {
 });
 
 function updateChart(){
-chart1.data.datasets[0].data = temperature;
+var nth = parseInt(document.getElementById("nth").value);
+var arr = [];
+var labs = [];
+var temps = [];
+for (var i = 0; i < consumption.length; i=i+nth) {
+  arr.push(consumption[i]);
+    temps.push(temperature[i]);
+    labs.push(time[i]);
+}
+console.log(arr);
+chart1.data.datasets[0].data = arr;
+chart2.data.datasets[0].data = temps;
+chart1.data.labels = labs;
+chart2.data.labels = labs;
 chart1.update();
+chart2.update();
 };
 
-new Chart(document.getElementById("line-chart2"), {
+var chart2 = new Chart(document.getElementById("line-chart2"), {
   type: 'line',
   data: {
     labels: time,
