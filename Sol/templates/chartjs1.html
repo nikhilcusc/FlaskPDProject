@@ -1,48 +1,70 @@
 <head>
   <meta charset="utf-8" />
-  <title>Chart.js Example</title>
+  <title>PD_challenge</title>
   <!-- import plugin script -->
   <script src='static/Chart.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.0/Chart.min.js"></script>
+
+<style>
+.slideContainer {
+    text-align: center;
+    margin-top:10px;
+    margin-left:50px;
+    width:80%;
+    background-color: powderblue;
+    outline-style: double;
+}
+.buttonContainer {
+    margin-top:10px;    
+    text-align: center;
+    width:100%;
+    background-color:#3cb371;
+    outline-style:     opacity: 0.9;
+;
+double}
+
+body {
+  background-color: linen;
+}
+</style>
 </head>
 
 
-<h1>Chart.js Example</h1>
+<h1>PD_challenge</h1>
 <body>
 
 <canvas id="line-chart" width="700" height="450"></canvas>
+
 <!--
 nth value slider
 -->
-<div class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="nth"
+<div class="slideContainer" >
+Steps  <input type="range" min="1" max="100" value="50" class="slider" id="nth"
 oninput="nthOp.value = nth.value">
    <output  id="nthOp"></output>
 </div>
-<button onclick="updatenthChart()"> Update charts (updates number of values in chart)</button>
 
 <!--
 start value slider
 -->
-<div class="slidecontainer">
-  <input type="range" min="1" max="17000" value="1" class="slider" id="startSlider"
+<div class="slideContainer" >
+ Start value <input type="range" min="1" max="17000" value="1" class="slider" id="startSlider"
 oninput="startSliderOp.value = startSlider.value">
    <output  id="startSliderOp"></output>
 </div>
-<button onclick="updateStartChart()"> Update start and end of charts </button>
 
 <!--
 end value slider
 -->
-<div class="slidecontainer">
-  <input type="range" min="17001" max="35180" value="35180" class="slider" id="endSlider"
+<div class="slideContainer"  >
+ End value <input type="range" min="17001" max="35180" value="35180" class="slider" id="endSlider"
 oninput="endSliderOp.value = endSlider.value">
    <output  id="endSliderOp"></output>
 </div>
 
-
-<canvas id="line-chart2" width="650" height="450"></canvas>
-
+<div class="buttonContainer">
+<button onclick="updateChart()"> Update charts </button>
+</div>
 <script>
 
 var time = [{% for item in time %}
@@ -68,61 +90,44 @@ var chart1 = new Chart(document.getElementById("line-chart"), {
     labels: time,
     datasets: [{ 
         data: consumption,
+        yAxisID: "CON",
         label: "consumption",
         borderColor: "#3e94cd",
         fill: false
-      }
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'Consumption (in kW)'
-    }
-  }
-});
-
-var chart2 = new Chart(document.getElementById("line-chart2"), {
-  type: 'line',
-  data: {
-    labels: time,
-    datasets: [{ 
+      },
+        { 
         data: temperature,
-        label: "temperature",
-        borderColor: "#3e95cd",
-        fill: false
+        yAxisID: "TEM",
+        label: "Temperature",
+        borderColor: "#8e5ea2",
+        backgroundColor: "#8e5ea2",
+        fillOpacity: .3,
+        fill: true
       }
     ]
   },
   options: {
     title: {
       display: true,
-      text: 'Temperature (in Fahrenheit)'
+      text: 'Consumption (in kW) vs Temperature (in Fahrenheit)'
+    },
+    scales: {
+      yAxes: [{
+        id: 'CON',
+        type: 'linear',
+        position: 'left',
+      }, {
+        id: 'TEM',
+        type: 'linear',
+        position: 'right',
+        
+      }]
     }
   }
 });
-// Function for nth update
-function updatenthChart(){
-var nth = parseInt(document.getElementById("nth").value);
-var arr = [];
-var labs = [];
-var temps = [];
-for (var i = 0; i < consumption.length; i=i+nth) {
-  arr.push(consumption[i]);
-    temps.push(temperature[i]);
-    labs.push(time[i]);
-}
-console.log(arr);
-chart1.data.datasets[0].data = arr;
-chart2.data.datasets[0].data = temps;
-chart1.data.labels = labs;
-chart2.data.labels = labs;
-chart1.update();
-chart2.update();
-};
 
 // Function for updating start and end of chart
-function updateStartChart(){
+function updateChart(){
 var nth = parseInt(document.getElementById("nth").value);
 var startVal = parseInt(document.getElementById("startSlider").value);
 var endValue = parseInt(document.getElementById("endSlider").value);
@@ -136,11 +141,9 @@ for (var i = startVal; i < endValue; i=i+nth) {
 }
 console.log(arr);
 chart1.data.datasets[0].data = arr;
-chart2.data.datasets[0].data = temps;
+chart1.data.datasets[1].data = temps;
 chart1.data.labels = labs;
-chart2.data.labels = labs;
 chart1.update();
-chart2.update();
 };
 
 </script>
