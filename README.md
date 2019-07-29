@@ -17,6 +17,11 @@ Here is a table of my loading times (in seconds):
 
 To run Flask quickly, I have a .sh file called runFlask.sh
 
+## Screenshots
+![Screenshot1](/Screenshots/graph_screenshot1.JPG)
+![Screenshot2](/Screenshots/graph_screenshot2.JPG)
+![Screenshot3](/Screenshots/graph_screenshot3.JPG)
+
 
 ## D3 approach
 This method has a problem where d3 linechart plots only some points, about 4500 points out of 35181. Please find code on linechart branch.
