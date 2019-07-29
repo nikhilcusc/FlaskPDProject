@@ -9,7 +9,7 @@ def home():
 
 @app.route('/chartjs')
 def chartjs():
-    dataxls = pd.read_excel (r'/home/fortknox/Documents/PD/PD_challenge/PD_challange_dataset.xlsx')
+    dataxls = pd.read_excel (r'/home/fortknox/Documents/PD/Sol/data/PD_challange_dataset.xlsx')
     df = pd.DataFrame(dataxls)
     df.fillna(0)
     temperature = []

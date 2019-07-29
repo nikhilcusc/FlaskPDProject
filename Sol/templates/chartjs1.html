@@ -14,6 +14,9 @@
     background-color: powderblue;
     outline-style: double;
 }
+.slider{
+    width:80%;
+}
 .buttonContainer {
     margin-top:10px;    
     text-align: center;
@@ -31,7 +34,7 @@ body {
 
 
 <h1>PD_challenge</h1>
-<body>
+<body onload="updateChart()">
 
 <canvas id="line-chart" width="700" height="450"></canvas>
 
@@ -65,8 +68,13 @@ oninput="endSliderOp.value = endSlider.value">
 <div class="buttonContainer">
 <button onclick="updateChart()"> Update charts </button>
 </div>
-<script>
 
+<div class="buttonContainer">
+<button onclick="updateChartdhmy()"> Toggle </button> 
+<p id="p1">Hourly, Daily, BiWeekly, Monthly, Yearly</p>
+</div>
+<script>
+var counter=0;
 var time = [{% for item in time %}
              "{{item}}",
             {% endfor %}];  // convert the char to int while creating the data array
@@ -144,6 +152,35 @@ chart1.data.datasets[0].data = arr;
 chart1.data.datasets[1].data = temps;
 chart1.data.labels = labs;
 chart1.update();
+};
+
+function updateChartdhmy(){
+
+var startVal = 1;
+var endValue = temperature.length;
+
+if (counter%5==4) {nth=2;document.getElementById("p1").innerHTML = "Hourly";}
+if (counter%5==3) {nth=48;document.getElementById("p1").innerHTML = "Daily";}
+if (counter%5==2) {nth=720;document.getElementById("p1").innerHTML = "Biweekly";}
+if (counter%5==1) {nth=1440;document.getElementById("p1").innerHTML = "Monthly";}
+if (counter%5==0) {nth=17280; document.getElementById("p1").innerHTML = "Yearly";}
+counter=counter+1;
+var arr = [];
+var labs = [];
+var temps = [];
+for (var i = startVal; i < endValue; i=i+nth) {
+  arr.push(consumption[i]);
+    temps.push(temperature[i]);
+    labs.push(time[i]);
+}
+
+console.log(arr);
+console.log("nth "+nth + "counter value :"+counter);
+chart1.data.datasets[0].data = arr;
+chart1.data.datasets[1].data = temps;
+chart1.data.labels = labs;
+chart1.update();
+
 };
 
 </script>
